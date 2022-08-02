@@ -1,0 +1,3 @@
+This is my first 'major' C project. I simply coded the game of tic tac toe to familiarize myself with C syntax and concepts. The code ended up being a bit simpler
+than I would have liked, and I did not end up implementing some of the more C-specific concepts like pointers, structs, typedef, etc. Soon, I will try to take on another
+project where these ideas can be more thoroughly explored.
