@@ -1,0 +1,10 @@
+In this project, I created a basic sentry turret using a nerf electric minigun (the brand wasn't actually nerf, but most I've found that most foam-dart shooting
+guns can be labled as nerf guns), an arduino, and a stepper motor. The actual build can be seen on my personal website (once the code for that site is complete).
+I coded the functionality of the turret in the Arduino IDE (which uses C++), and that's why the project's code is included within this repository. The turret has 
+two main modes: a manual control/fire mode, where the user can both aim and fire the turret using a joy-stick module, and a 'sentry' mode, where the turret simply
+'guards' an area by panning back and forth over it. I intitially wanted to include some form of AI functionality, so that the turret could shoot at moving targets
+or even recognize familiar faces, but, unfortunately, my knowledge of embedded systems did not extend as far as the implementation of facial recognition into 
+microcontrollers, and I do not have enough time to study the topic before school starts up. I am taking a computer engineering course during the first semester, and
+I am hoping that such a course will give me more insite into the topic. One day, I will return to this project, and include all the cool features I wish to include, 
+but for now, it's just a very rough protoype of what's to come! 
+
