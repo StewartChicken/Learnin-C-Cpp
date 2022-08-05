@@ -20,10 +20,6 @@
 
 
 // Pin assignment
-
-// Joytick pins. y and x represent the x-axis/y-axis motion of the joy stick
-// The sw pin represents the button functionality, but it is not used during the program
-int sw = 11;
 int y = A1;
 int x = A0;
 
@@ -33,6 +29,11 @@ int pulPin = 3;
 int powerUpPin = 8;
 
 int buttonReadPin = 7;
+
+int gatSpeedPin = 5;
+int gatDir1 = 4;
+int gatDir2 = 6;
+int mSpeed = 255;
 
 boolean dir = HIGH;
 
@@ -44,7 +45,6 @@ int manualPulseDelay = 2000;
 boolean sentryMode = false;
 
 // Read values from pins
-int swVal;
 int yVal;
 int xVal;
 
@@ -60,9 +60,6 @@ void setup() {
   
   pinMode(dirPin, OUTPUT);
   pinMode(pulPin, OUTPUT);
-  
-  pinMode(sw, INPUT);
-  digitalWrite(sw, HIGH);
 
   pinMode(y, INPUT);
   pinMode(x, INPUT);
@@ -72,7 +69,10 @@ void setup() {
   pinMode(buttonReadPin, INPUT);
 
   pinMode(12, OUTPUT);
-  pinMode(5, OUTPUT);
+
+  pinMode(gatSpeedPin, OUTPUT);
+  pinMode(gatDir1, OUTPUT);
+  pinMode(gatDir2, OUTPUT);
 
   Serial.begin(115200);
 
@@ -81,17 +81,17 @@ void setup() {
 void loop() {
 
   buttonNew = digitalRead(buttonReadPin);
-
+  Serial.println(buttonNew);
   if(buttonOld == 0 && buttonNew == 1){
     switchMode();
   }
   
   buttonOld = buttonNew;
 
-  Serial.println(buttonOld);
-
   if(sentryMode){
     digitalWrite(dirPin, dir);
+    digitalWrite(powerUpPin, LOW);
+    digitalWrite(gatSpeedPin, LOW);
   
     for(int i = 0; i < sentryTurnRadius; i ++){
       digitalWrite(pulPin, LOW);
@@ -112,11 +112,15 @@ void loop() {
     if(poweredUp){
       digitalWrite(powerUpPin, HIGH);
       digitalWrite(12, HIGH);
-      digitalWrite(5, HIGH);
+      digitalWrite(gatDir1, HIGH);
+      digitalWrite(gatDir2, LOW);
+      analogWrite(gatSpeedPin, mSpeed);
     }else{
       digitalWrite(powerUpPin, LOW);
       digitalWrite(12, LOW);
-      digitalWrite(5, LOW);
+      digitalWrite(gatDir1, LOW);
+      digitalWrite(gatDir2, HIGH);
+      analogWrite(gatSpeedPin, 0);
     }
     
     if(yVal < 100){
