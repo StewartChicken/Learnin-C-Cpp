@@ -1,6 +1,12 @@
+/*
+This Hash Table implementation uses an array of linked list elements which contains an int/vector 
+pair to represnt key/value pairs within a hash table. Each vector contains int/int pair elements to represent the X/Y
+coordinates of each data point. This HashTable will be used for a basic KNN implementation, so it only allows 
+int/vector<pair<int, int>> pairs to be inserted as keys/values 
+*/
 #include <iostream>
-#include <list> //This hashmap implementation utilizes linked lists of pairs of pairs
-                //to contain the key, value, and size
+#include <list> 
+#include <vector>
 
 using namespace std;
 
@@ -11,28 +17,43 @@ using namespace std;
 
 //Hashtable to implement K-Nearest-Neighbors algorithm
 //Keys = integers (classifications)
-//Values = arrays of integers (data)
+//Values = vectors of pairs of ints (data)
 
 class HashMap{
     private:
-        //List of pairs "CAPACITY" units long
-        //Each 'pair' is a key value pair. The linked list contains these pairs which in turn
-        //represents the Hash Map data structure
-        //Each list contains a pair of a pair: the inner pair contains the to-be-hashed key/value 
-        //while the outer pair contains that inner pair as well as the size of the array value
-        list<pair<pair<int, int*>, int>> table[CAPACITY]; 
+        /*
+        List of pairs "CAPACITY" units long
+        Each 'pair' is a key value pair. The linked list contains these pairs which in turn
+        represents the Hash Map data structure. Each pair contains an int (key/classification)
+        and a vector (value/data), which in turn contains a pair of ints (x/y coordinates)
+        */
+        list<pair<int, vector<pair<int, int>>>> table[CAPACITY]; 
 
     public:
 
         bool isEmpty() const;
         int hashFunction(int key);
-        void insertItem(int key, int* value, int size);
+        void insertItem(int key, vector<pair<int, int>> data);
         void removeItem(int key);
-        int* findItem(int key);
+        vector<pair<int, int>> findItem(int key);
         int findItemSize(int key);
-        void printTable(); //Prints constants of table
+        int getNumElements() const; //Returns the number of key/value pairs
+        void printTable(); //Prints contents of table
 
 };
+
+//Returns how many elements are filled within the hash map
+int HashMap::getNumElements() const{
+    int fullCells = 0;
+    
+    for(int i{}; i < CAPACITY; i ++){
+        if(table[i].size() > 0){
+            fullCells ++;
+        }
+    }
+
+    return fullCells;
+}
 
 bool HashMap::isEmpty() const{
     int sum{};
@@ -53,31 +74,30 @@ int HashMap::hashFunction(int key){
     return key % CAPACITY;
 }
 
-void HashMap::insertItem(int key, int* value, int size){
+void HashMap::insertItem(int key, vector<pair<int, int>> data){
     int hashValue = hashFunction(key);
 
     //'cell' is a reference directly to the list at index 'hashValue' with the 
-    //automatic type of list<pair<int, int*>>
+    //automatic type of list<pair<int, vector<pair<int, int>>>>
     auto& cell = table[hashValue];
     auto iterator = begin(cell); 
     bool keyExists = false;
 
     for(; iterator != end(cell); iterator ++){
-        if(iterator -> first.first == key){
+        if(iterator -> first == key){
             keyExists = true;
-            iterator -> first.second = value;
-            iterator -> second = size;
+            iterator -> second = data;
             cout << "Key already exists. Value replaced" << endl;
             break;
         }
     }
     
     if(!keyExists){
-        //key, value, size
-        pair<pair<int, int*>, int> tempPair;
-        tempPair.first.first = key;
-        tempPair.first.second = value;
-        tempPair.second = size;
+        //key, data
+        pair<int, vector<pair<int ,int>>> tempPair;
+        tempPair.first = key;
+        tempPair.second = data;
+
         cell.emplace_back(tempPair);
     }
 
@@ -92,7 +112,7 @@ void HashMap::removeItem(int key){
     bool keyExists = false;
 
     for(; iterator != end(cell); iterator ++){
-        if(iterator -> first.first == key){
+        if(iterator -> first == key){
             keyExists = true;
             iterator = cell.erase(iterator);
             cout << "Pair removed" << endl;
@@ -107,19 +127,20 @@ void HashMap::removeItem(int key){
     return;
 }
 
-int* HashMap::findItem(int key){
+vector<pair<int, int>> HashMap::findItem(int key){
     int hashValue = hashFunction(key);
     auto& cell = table[hashValue];
     auto iterator = begin(cell);
 
     for (; iterator != end(cell); iterator ++){
-        if(iterator -> first.first == key){
-            return iterator -> first.second;
+        if(iterator -> first == key){
+            return iterator -> second;
         }
     }
 
     cout << "Item not found" << endl;
-    return NULL;
+    vector<pair<int, int>> returnVector;
+    return returnVector;
 }
 
 int HashMap::findItemSize(int key){
@@ -128,8 +149,8 @@ int HashMap::findItemSize(int key){
     auto iterator = begin(cell);
 
     for(; iterator != end(cell); iterator ++){
-        if(iterator -> first.first == key){
-            return iterator -> second;
+        if(iterator -> first == key){
+            return iterator -> second.size();
         }
     }
 
@@ -144,16 +165,16 @@ void HashMap::printTable(){
 
         auto iterator = table[i].begin();
         for (; iterator != table[i].end(); iterator ++){
-            cout << "Key: " << iterator -> first.first << endl;
-            cout << "Value: ";
-            for(int j{}; j < iterator -> second; j ++){
-                cout << *(iterator -> first.second + j) << " ";
+            cout << "Key: " << iterator -> first << endl;
+            cout << "Values: " << endl;
+            for(int j{}; j < iterator -> second.size(); j ++){
+                cout << (iterator -> second)[j].first << ", " << (iterator -> second)[j].second << endl;
             }
             cout << endl;
         }
 
     }
 
-    cout << "Done" << endl;
+    cout << "Done printing table contents" << endl;
     return;
 }
