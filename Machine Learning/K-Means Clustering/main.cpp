@@ -31,10 +31,16 @@ int main(){
 
 	myPoint.push_back(5);
 	myPoint.push_back(4);
-
 	myPoint.shrink_to_fit();
 
-	cout << myPoint.size() << endl;
+	vector<int> test;
+
+	test.resize(2);
+	test.push_back(57);
+	test.push_back(14);
+	test.shrink_to_fit();
+
+	cout << cluster.euclideanDistance(myPoint, test) << endl;
 
 	return 0;
 }
