@@ -27,20 +27,11 @@ int main(){
 	Clustering cluster;
 
 	vector<int> myPoint;
-	myPoint.resize(2);
+	
+	myPoint.push_back(1);
+	myPoint.push_back(2);
 
-	myPoint.push_back(5);
-	myPoint.push_back(4);
-	myPoint.shrink_to_fit();
-
-	vector<int> test;
-
-	test.resize(2);
-	test.push_back(57);
-	test.push_back(14);
-	test.shrink_to_fit();
-
-	cout << cluster.euclideanDistance(myPoint, test) << endl;
+	cluster.classify(data, 2, myPoint);
 
 	return 0;
 }

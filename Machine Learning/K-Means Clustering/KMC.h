@@ -14,8 +14,31 @@ class Clustering{
 
 };
 
+//Classifying method
 int Clustering::classify(vector<vector<int>> data, int k, vector<int> point){
 
+	//vector of pairs of distances and their respective indeces
+	vector<pair<int, float>> distances;
+
+	for(int i{}; i < k; i ++){ // For every classifiying point (to-be-created in this loop)
+
+		for(int j{}; j < data.size(); j ++){ // Finds distance between every data point and the current classifying point
+
+			pair<int, float> keyDistancePair;
+			keyDistancePair.first = j;
+			keyDistancePair.second = distance(data[j], point);
+
+			distances.push_back(keyDistancePair);
+
+			int numNeighbors = data.size() / k;
+		}
+
+	}
+
+	for(int i{}; i < 12; i ++){
+		cout << distances[i].first << ", " << distances[i].second << endl;
+	}
+	
 	return 0;
 }
 
